@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drag and Drop Image Upload</title>
+    <style>
+        #drop_zone {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed #0087F7;
+            margin: 10px;
+            padding: 50px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="drop_zone">Drop files here</div>
+    <script>
+        var dropZone = document.getElementById('drop_zone');
+
+        dropZone.ondragover = function(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        };
+
+        dropZone.ondrop = function(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            
+            var formData = new FormData();
+            formData.append('file', files[0]);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.text())
+              .then(data => alert(data));
+        };
+    </script>
+</body>
+</html>
